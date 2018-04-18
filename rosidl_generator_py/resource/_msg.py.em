@@ -209,7 +209,17 @@ class @(spec.base_type.type)(metaclass=Metaclass):
 @{assert_msg_suffixes.insert(1, 'with length %d' % field.type.array_size)}@
 @[      end if]@
 @[    end if]@
+
+
+@# add wl 
+@[      if field.type.type == 'uint8']@
+             True and 
+@[      else]@
              all(isinstance(v, @(get_python_type(field.type))) for v in value) and
+@[      end if]@
+@# end add wl
+
+
 @{assert_msg_suffixes.append("and each value of type '%s'" % get_python_type(field.type))}@
 @[    if field.type.type.startswith('int')]@
 @{
@@ -223,7 +233,15 @@ bound = 2**(nbits - 1)
 nbits = int(field.type.type[4:])
 bound = 2**nbits
 }@
+
+
+@# add wl 
+@[      if field.type.type == 'uint8']@
+             True), \
+@[      else]@
              all(val >= 0 and val < @(bound) for val in value)), \
+@[      end if]@
+@# end add wl
 @{assert_msg_suffixes.append('and each unsigned integer in [0, %d]' % (bound - 1))}@
 @[    elif field.type.type == 'char']@
              all(ord(val) >= -128 and ord(val) < 128 for val in value)), \
