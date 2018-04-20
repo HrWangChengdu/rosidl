@@ -186,16 +186,22 @@ nested_type = '%s__%s__%s' % (field.type.pkg_name, 'msg', field.type.type)
     if(PyBytes_Check(field)){
         Py_ssize_t size = PyBytes_Size(field);
 
-        if (!rosidl_generator_c__uint8__Array__init(&(ros_message->data), size)) {
+        if (!rosidl_generator_c__uint8__Array__init(&(ros_message->@(field.name)), size)) {
             PyErr_SetString(PyExc_RuntimeError, "unable to create uint8__Array ros_message");
             Py_DECREF(field);
             return NULL;
         }
         
-        uint8_t * dest = ros_message->data.data;
+@[    if field.type.array_size is None or field.type.is_upper_bound]@
+    @primitive_msg_type_to_c(field.type.type) * dest = ros_message->@(field.name).data;
+@[    else]@
+    @primitive_msg_type_to_c(field.type.type) * dest = ros_message->@(field.name);
+@[    end if]@
+        
+      
 
         char * d = PyBytes_AsString(field);
-        memcpy(dest, d, sizeof(uint8_t)*size);
+        memcpy(dest, d, sizeof(@primitive_msg_type_to_c(field.type.type))*size);
     }else{
            
     PyObject * seq_field = PySequence_Fast(field, "expected a sequence in '@(field.name)'");
