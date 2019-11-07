@@ -38,6 +38,8 @@ ament_export_dependencies(rosidl_typesupport_interface)
 ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})
 
+ament_index_register_resource("rosidl_generator_packages")
+
 ament_python_install_package(${PROJECT_NAME})
 
 if(BUILD_TESTING)
@@ -70,6 +72,7 @@ if(BUILD_TESTING)
     "msg/StaticArrayNested.msg"
     "msg/StaticArrayPrimitives.msg"
     "msg/Strings.msg"
+    "msg/StringArrays.msg"
     "msg/Telegram1.msg"
     "msg/Telegram2.msg"
     "msg/Uint16.msg"
@@ -91,6 +94,7 @@ if(BUILD_TESTING)
   )
 
   rosidl_generate_interfaces(${PROJECT_NAME}_interfaces ${message_files}
+    ADD_LINTER_TESTS
     SKIP_INSTALL
   )
 
