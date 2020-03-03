@@ -147,6 +147,11 @@ def extract_content_from_ast(tree):
             CONSTANT_MODULE_SUFFIX
         if constant_module_name in constants:
             msg.constants += constants[constant_module_name]
+
+        constant_module_name = msg.structure.namespaced_type.name + '_pys'
+        if constant_module_name in constants:
+            msg.pys += constants[constant_module_name]
+
         content.elements.append(msg)
 
     elif len(struct_defs) == 2:
