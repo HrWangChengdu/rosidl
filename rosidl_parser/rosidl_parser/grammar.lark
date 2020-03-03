@@ -22,7 +22,7 @@ COMMENT: "//" /[^\n]/*
 
 
 // 7.2.3 Identifiers
-IDENTIFIER: LETTER (LETTER | DIGIT | "_")*
+IDENTIFIER: (LETTER | DIGIT | "_")* LETTER (LETTER | DIGIT | "_")*
 
 
 // 7.2.6 Literals

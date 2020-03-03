@@ -309,10 +309,12 @@ class Constant:
             raise TypeError("the constant type '%s' must be a primitive type" %
                             primitive_type)
         self.type = primitive_type
-        if not is_valid_constant_name(name):
-            raise NameError(
-                "'{}' is an invalid constant name. It should have the pattern '{}'".format(
-                    name, VALID_CONSTANT_NAME_PATTERN.pattern))
+
+        if not name.startswith('_PY_'):
+            if not is_valid_constant_name(name):
+                raise NameError(
+                    "'{}' is an invalid constant name. It should have the pattern '{}'".format(
+                        name, VALID_CONSTANT_NAME_PATTERN.pattern))
         self.name = name
         if value_string is None:
             raise ValueError("the constant value must not be 'None'")
@@ -343,10 +345,11 @@ class Field:
             raise TypeError(
                 "the field type '%s' must be a 'Type' instance" % type_)
         self.type = type_
-        if not is_valid_field_name(name):
-            raise NameError(
-                "'{}' is an invalid field name. It should have the pattern '{}'".format(
-                    name, VALID_FIELD_NAME_PATTERN.pattern))
+        if name != 'BASE':
+            if not is_valid_field_name(name):
+                raise NameError(
+                    "'{}' is an invalid field name. It should have the pattern '{}'".format(
+                        name, VALID_FIELD_NAME_PATTERN.pattern))
         self.name = name
         if default_value_string is None:
             self.default_value = None
@@ -382,7 +385,7 @@ class MessageSpecification:
             pkg_name + PACKAGE_NAME_MESSAGE_TYPE_SEPARATOR + msg_name)
         self.msg_name = msg_name
         self.annotations = {}
-
+        
         self.fields = []
         for index, field in enumerate(fields):
             if not isinstance(field, Field):
@@ -398,11 +401,15 @@ class MessageSpecification:
                 ', '.join(sorted(duplicate_field_names)))
 
         self.constants = []
+        self.pys = []
         for index, constant in enumerate(constants):
             if not isinstance(constant, Constant):
                 raise TypeError("constant %u must be a 'Constant' instance" %
                                 index)
-            self.constants.append(constant)
+            if constant.name.startswith('_PY_'):
+                self.pys.append(constant)
+            else:
+                self.constants.append(constant)
         # ensure that there are no duplicate constant names
         constant_names = [c.name for c in self.constants]
         duplicate_constant_names = {n for n in constant_names

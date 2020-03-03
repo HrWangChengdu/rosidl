@@ -532,7 +532,7 @@ class Constant(Annotatable):
 class Message:
     """A structure containing constants."""
 
-    __slots__ = ('structure', 'constants')
+    __slots__ = ('structure', 'constants', 'pys')
 
     def __init__(self, structure: Structure):
         """
@@ -544,6 +544,7 @@ class Message:
         assert isinstance(structure, Structure)
         self.structure = structure
         self.constants = []
+        self.pys = []
 
 
 class Service:
