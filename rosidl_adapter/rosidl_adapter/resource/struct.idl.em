@@ -44,6 +44,13 @@ else:
 @[  end for]@
     };
 @[end if]@
+@[if msg.pys]@
+    module @(msg.msg_name)_pys {
+@[  for constant in msg.pys]@
+      const @(get_idl_type(constant.type)) @(constant.name) = @(to_idl_literal(get_idl_type(constant.type), constant.value));
+@[  end for]@
+    };
+@[end if]@
 @#
 @[if msg.annotations.get('comment', [])]@
     @@verbatim (language="comment", text=@
